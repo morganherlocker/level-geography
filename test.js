@@ -1,23 +1,32 @@
 var test = require('tape'),
-    leveldb = require('level'),
+    levelup = require('levelup'),
     fs = require('fs'),
     queue = require('queue-async'),
-    Geo = require('./');
+    geo = require('./');
 
 test('insert, query, and delete', function(t){
-    var pts = fs.readFileSync('./fixtures/points.geojson');
-    var db = levelup('./mydb');
-    var geo = Geo(db);
-
+    var pts = JSON.parse(fs.readFileSync('./fixtures/points.geojson'));
+    var db = levelup('./db');
     var q = queue(1);
 
     pts.features.forEach(function(pt){
-        q.defer(geo.put, pt);
+        q.defer(geo.put, db, pt);
     });
 
     q.awaitAll(function(err){
         t.notOk(err);
-        console.log('PUT Complete');
+        db.createReadStream()
+        .on('data', function (data) {
+            t.ok(data.key);
+            t.ok(data.value)
+        })
+        .on('error', function (err) {
+            t.notOk(err);
+        })
+        .on('end', function () {
+            
+            t.end();
+        })
     });
 
 

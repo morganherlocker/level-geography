@@ -29,6 +29,7 @@
     "queue-async": "~1.0.7"
   },
   "dependencies": {
-    "tile-cover": "~0.2.1"
+    "tile-cover": "^0.2.2",
+    "turf-bbox-polygon": "^0.1.5"
   }
 }
