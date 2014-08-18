@@ -24,7 +24,7 @@ test('insert, query', function(t){
             t.notOk(err);
         })
         .on('end', function () {
-            geo.bboxQuery(db, [-111.3134765625,33.90689555128866,-99.00878906249999,42.16340342422401], function(err, fc){
+            geo.bboxQuery(db, [ -107.841796875,34.161818161230386,-103.5791015625,37.16031654673677], function(err, fc){
                 t.notOk(err, 'bbox query');
                 t.notEqual(fc.features.length, 0)
             })

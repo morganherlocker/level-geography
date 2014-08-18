@@ -27,8 +27,8 @@ module.exports.bboxQuery = function(db, bbox, done){
         type: 'Point',
         coordinates: [bbox[2], bbox[1]]
     };
-    var lowIndex = cover.indexes(lowGeometry, {min_zoom: 3, max_zoom: 14})[0];
-    var highIndex = cover.indexes(highGeometry, {min_zoom: 3, max_zoom: 14})[0];
+    var lowIndex = cover.indexes(lowGeometry, {min_zoom: 3, max_zoom: 20})[0];
+    var highIndex = cover.indexes(highGeometry, {min_zoom: 3, max_zoom: 20})[0];
 
     db.createReadStream({gte: lowIndex, lte: highIndex})
     .on('data', function (data) {
