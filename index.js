@@ -1,5 +1,4 @@
-var cover = require('tile-cover'),
-    bboxPolygon = require('turf-bbox-polygon');
+var cover = require('tile-cover');
 
 module.exports.put = function(db, feature, done){
     var indexes = cover.indexes(feature.geometry, {min_zoom: 3, max_zoom: 14})
@@ -7,7 +6,7 @@ module.exports.put = function(db, feature, done){
         return {
             type: 'put',
             key: index,
-            value: feature
+            value: JSON.stringify(feature)
         };
     });
     db.batch(items, function(err){
@@ -16,18 +15,29 @@ module.exports.put = function(db, feature, done){
 }
 
 module.exports.bboxQuery = function(db, bbox, done){
-    var poly = bboxPolygon(bbox);
+    var fc = {
+        type: 'FeatureCollection',
+        features: []
+    }
+    var lowGeometry = {
+        type: 'Point',
+        coordinates: [bbox[0], bbox[3]]
+    };
+    var highGeometry = {
+        type: 'Point',
+        coordinates: [bbox[2], bbox[1]]
+    };
+    var lowIndex = cover.indexes(lowGeometry, {min_zoom: 3, max_zoom: 14})[0];
+    var highIndex = cover.indexes(highGeometry, {min_zoom: 3, max_zoom: 14})[0];
 
-
-    db.createReadStream()
+    db.createReadStream({gte: lowIndex, lte: highIndex})
     .on('data', function (data) {
-        console.log(data.key, '=', data.value)
+        fc.features.push(JSON.parse(data.value));
     })
     .on('error', function (err) {
-        t.notOk(err);
+        done(err);
     })
     .on('end', function () {
-        console.log('Stream closed');
-        t.end();
-    })
+        done(null, fc);
+    });
 }
