@@ -1,7 +1,7 @@
 var cover = require('tile-cover');
 
 module.exports.put = function(db, feature, done){
-    var indexes = cover.indexes(feature.geometry, {min_zoom: 3, max_zoom: 14})
+    var indexes = cover.indexes(feature.geometry, {min_zoom: 3, max_zoom: 14});
     var items = indexes.map(function(index){
         return {
             type: 'put',
@@ -12,13 +12,13 @@ module.exports.put = function(db, feature, done){
     db.batch(items, function(err){
         done(err);
     });
-}
+};
 
 module.exports.bboxQuery = function(db, bbox, done){
     var fc = {
         type: 'FeatureCollection',
         features: []
-    }
+    };
     var lowGeometry = {
         type: 'Point',
         coordinates: [bbox[0], bbox[3]]
@@ -40,4 +40,4 @@ module.exports.bboxQuery = function(db, bbox, done){
     .on('end', function () {
         done(null, fc);
     });
-}
+};

@@ -18,7 +18,7 @@ test('insert, query', function(t){
         db.createReadStream()
         .on('data', function (data) {
             t.ok(data.key, 'key ok');
-            t.ok(data.value, 'value ok')
+            t.ok(data.value, 'value ok');
         })
         .on('error', function (err) {
             t.notOk(err);
@@ -26,9 +26,9 @@ test('insert, query', function(t){
         .on('end', function () {
             geo.bboxQuery(db, [ -107.841796875,34.161818161230386,-103.5791015625,37.16031654673677], function(err, fc){
                 t.notOk(err, 'bbox query');
-                t.notEqual(fc.features.length, 0)
-            })
+                t.notEqual(fc.features.length, 0);
+            });
             t.end();
-        })
+        });
     });
 });
