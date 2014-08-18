@@ -1,6 +1,6 @@
 {
   "name": "level-geography",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "indexed geography storage in leveldb",
   "main": "index.js",
   "scripts": {
