@@ -1,5 +1,6 @@
 var test = require('tape'),
     levelup = require('levelup'),
+    leveldown = require('leveldown'),
     fs = require('fs'),
     queue = require('queue-async'),
     geo = require('./');
@@ -9,8 +10,8 @@ test('insert, query', function(t){
     var db = levelup('./db');
     var q = queue(1);
 
-    pts.features.forEach(function(pt){
-        q.defer(geo.put, db, pt);
+    pts.features.forEach(function(pt, i){
+        q.defer(geo.put, db, pt, i.toString());
     });
 
     q.awaitAll(function(err){
@@ -28,7 +29,33 @@ test('insert, query', function(t){
                 t.notOk(err, 'bbox query');
                 t.notEqual(fc.features.length, 0);
             });
-            t.end();
+            db.close(function(err){
+                t.notOk(err, 'db closed');
+                leveldown.destroy('./db', function(err){
+                    t.notOk(err, 'db destroyed')
+                    t.end()
+                });
+            });
+        });
+    });
+});
+
+test('insert polygon -- verify dedupe', function(t){
+    var poly = JSON.parse(fs.readFileSync('./fixtures/polygon.geojson'));
+    var db = levelup('./db');
+
+    geo.put(db, poly, '1', function(err){
+        t.notOk(err, 'polygon inserted');
+        geo.bboxQuery(db, [ -127.61718749999999,21.94304553343818,-60.46875,47.98992166741417], function(err, fc){
+            t.notOk(err, 'bbox query');
+            t.equal(fc.features.length, 1);
+            db.close(function(err){
+                t.notOk(err, 'db closed');
+                leveldown.destroy('./db', function(err){
+                    t.notOk(err, 'db destroyed')
+                    t.end()
+                });
+            });
         });
     });
 });

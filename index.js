@@ -1,11 +1,12 @@
-var cover = require('tile-cover');
+var cover = require('tile-cover'),
+    getCoords = require('geojson-coords');
 
-module.exports.put = function(db, feature, done){
-    var indexes = cover.indexes(feature.geometry, {min_zoom: 3, max_zoom: 14});
+module.exports.put = function(db, feature, featureId, done){
+    var indexes = cover.indexes(feature.geometry, {min_zoom: 3, max_zoom: 9});
     var items = indexes.map(function(index){
         return {
             type: 'put',
-            key: index,
+            key: index+'!'+featureId,
             value: JSON.stringify(feature)
         };
     });
@@ -19,6 +20,7 @@ module.exports.bboxQuery = function(db, bbox, done){
         type: 'FeatureCollection',
         features: []
     };
+    var featureIds = [];
     var lowGeometry = {
         type: 'Point',
         coordinates: [bbox[0], bbox[3]]
@@ -32,7 +34,11 @@ module.exports.bboxQuery = function(db, bbox, done){
 
     db.createReadStream({gte: lowIndex, lte: highIndex})
     .on('data', function (data) {
-        fc.features.push(JSON.parse(data.value));
+        var featureId = data.key.split('!')[data.key.split('!').length - 1]
+        if(featureIds.indexOf(featureId) === -1) {
+            featureIds.push(featureId)
+            fc.features.push(JSON.parse(data.value));
+        }
     })
     .on('error', function (err) {
         done(err);
