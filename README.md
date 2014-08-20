@@ -20,7 +20,9 @@ geo.put(db, feauture, featureID, function(err){
 
 ###.put
 ```js
-geo.bboxQuery(db, [-111.3134765625,33.90689555128866,-99.00878906249999,42.16340342422401], function(err, fc){
+geo.bboxQuery(db, 
+	[-111.3134765625,33.90689555128866,-99.00878906249999,42.16340342422401], 
+	function(err, fc){
 	
 })
 ```
@@ -41,7 +43,8 @@ pts.features.forEach(function(pt, i){
 });
 
 q.awaitAll(function(err){
-    geo.bboxQuery(db, [-111.3134765625,33.90689555128866,-99.00878906249999,42.16340342422401], function(err, fc){
+    geo.bboxQuery(db, 
+    	[-111.3134765625,33.90689555128866,-99.00878906249999,42.16340342422401], function(err, fc){
         console.log(JSON.stringify(fc))
     });
 });
