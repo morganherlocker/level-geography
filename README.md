@@ -50,3 +50,5 @@ q.awaitAll(function(err){
 });
 ```
 
+##about
+level-geography uses [tile-cover](https://github.com/mapbox/tile-cover) to generate [quadkey](http://msdn.microsoft.com/en-us/library/bb259689.aspx) indexes. For points, the quadkey simply represents a tile at the specified or default zoom level. For lines and polygons, the minimum number of tiles are used to cover the geography, and each feature is stored redundantly. level-geography abstracts these details away, however, so queries only return one line or polygon for each feature.
