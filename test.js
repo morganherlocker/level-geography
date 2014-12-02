@@ -46,7 +46,7 @@ test('insert polygon -- verify dedupe', function(t){
 
     geo.put(db, poly, '1', function(err){
         t.notOk(err, 'polygon inserted');
-        geo.bboxQuery(db, [ -127.61718749999999,21.94304553343818,-60.46875,47.98992166741417], function(err, fc){
+        geo.bboxQuery(db, [ 21.9287109375,12.382928338487408,35.5078125,25.720735134412106], function(err, fc){
             t.notOk(err, 'bbox query');
             t.equal(fc.features.length, 1);
             db.close(function(err){
