@@ -31,6 +31,6 @@
     "geojson-coords": "0.0.0",
     "leveldown": "^0.10.2",
     "levelup": "^0.18.6",
-    "tile-cover": "^0.2.2"
+    "tile-cover": "^2.3.1"
   }
 }
