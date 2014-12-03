@@ -24,8 +24,9 @@
   },
   "homepage": "https://github.com/morganherlocker/level-geography",
   "devDependencies": {
-    "tape": "~3.0.3",
-    "queue-async": "~1.0.7"
+    "queue-async": "~1.0.7",
+    "rimraf": "^2.2.8",
+    "tape": "~3.0.3"
   },
   "dependencies": {
     "geojson-coords": "0.0.0",

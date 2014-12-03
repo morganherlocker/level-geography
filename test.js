@@ -2,13 +2,16 @@ var test = require('tape');
 var fs = require('fs');
 var queue = require('queue-async');
 var level = require('level');
+var rimraf = require('rimraf');
+
 var sublevel = require('level-sublevel');
 var levelGeo = require('./');
-var db = levelGeo(sublevel(level('./db')));
+//var db = levelGeo(sublevel(level(__dirname+'/db')));
 
 test('insert, query', function(t){
+    var dbPath = __dirname+'/point';
     var pts = JSON.parse(fs.readFileSync('./fixtures/points.geojson'));
-    var db = levelGeo(sublevel(level('./db')));
+    var db = levelGeo(sublevel(level(dbPath)));
     var q = queue(1);
 
     pts.features.forEach(function(pt, i){
@@ -32,9 +35,9 @@ test('insert, query', function(t){
             });
             db.close(function(err){
                 t.notOk(err, 'db closed');
-                leveldown.destroy('./db', function(err){
-                    t.notOk(err, 'db destroyed')
-                    t.end()
+                rimraf(dbPath, function(err){
+                    t.notOk(err, 'db destroyed');
+                    t.end();
                 });
             });
         });
@@ -42,8 +45,9 @@ test('insert, query', function(t){
 });
 
 test('insert polygon -- verify dedupe', function(t){
+    var dbPath = __dirname+'/polygon';
     var poly = JSON.parse(fs.readFileSync('./fixtures/polygon.geojson'));
-    var db = levelGeo(sublevel(level('./db')));
+    var db = levelGeo(sublevel(level(dbPath)));
 
     db.geoPut(poly, '1', function(err){
         t.notOk(err, 'polygon inserted');
@@ -52,9 +56,9 @@ test('insert polygon -- verify dedupe', function(t){
             t.equal(fc.features.length, 1);
             db.close(function(err){
                 t.notOk(err, 'db closed');
-                leveldown.destroy('./db', function(err){
-                    t.notOk(err, 'db destroyed')
-                    t.end()
+                rimraf(dbPath, function(err){
+                    t.notOk(err, 'db destroyed');
+                    t.end();
                 });
             });
         });
