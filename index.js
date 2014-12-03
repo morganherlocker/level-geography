@@ -1,9 +1,10 @@
 var cover = require('tile-cover'),
     getCoords = require('geojson-coords');
 
-module.exports = function (db) {
+module.exports = function (db, limits) {
+    if(!limits) limits = {min_zoom: 3, max_zoom: 9};
     db.geoPut = function geoPut(feature, featureId, done) {
-        var indexes = cover.indexes(feature.geometry, {min_zoom: 3, max_zoom: 9});
+        var indexes = cover.indexes(feature.geometry, limits);
         var items = indexes.map(function(index){
             return {
                 type: 'put',
@@ -48,7 +49,6 @@ module.exports = function (db) {
             done(null, fc);
         });
     };
-
 
     return db;
 };

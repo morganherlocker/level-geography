@@ -45,7 +45,7 @@ test('insert, query', function(t){
 test('insert polygon -- verify dedupe', function(t){
     var dbPath = __dirname+'/polygon';
     var poly = JSON.parse(fs.readFileSync('./fixtures/polygon.geojson'));
-    var db = levelGeo(sublevel(level(dbPath)));
+    var db = levelGeo(sublevel(level(dbPath)), {min_zoom:15, max_zoom: 15});
 
     db.geoPut(poly, '1', function(err){
         t.notOk(err, 'polygon inserted');
