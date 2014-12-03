@@ -3,10 +3,8 @@ var fs = require('fs');
 var queue = require('queue-async');
 var level = require('level');
 var rimraf = require('rimraf');
-
 var sublevel = require('level-sublevel');
 var levelGeo = require('./');
-//var db = levelGeo(sublevel(level(__dirname+'/db')));
 
 test('insert, query', function(t){
     var dbPath = __dirname+'/point';
