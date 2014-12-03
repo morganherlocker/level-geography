@@ -1,8 +1,7 @@
 level-geography
-===============
+---
 
 indexed geography storage in leveldb
-
 
 ##install
 ```bash
@@ -11,41 +10,33 @@ npm install level-geography
 
 ##api
 
-###.put
+###.geoPut
 ```js
-geo.put(db, feauture, featureID, function(err){
-	
-})
+db.geoPut(feauture, featureID, callback)
 ```
 
 ###.bboxQuery
 ```js
-geo.bboxQuery(db, 
-	[-111.3134765625,33.90689555128866,-99.00878906249999,42.16340342422401], 
-	function(err, fc){
-	
-})
+db.bboxQuery([-111.3134765625,33.90689555128866,-99.00878906249999,42.16340342422401], callback)
 ```
 
 ##usage
 ```js
-var geo = require('level-geography'),
-	queue = require('queue-async'),
-	levelup = require('levelup');
+var level = require('level');
+var sublevel = require('level-sublevel');
+var levelGeo = require('level-geography');
 
-var pts = JSON.parse(fs.readFileSync('./fixtures/points.geojson'));
-var db = levelup('./db');
-var q = queue(1);
+var limits = {min_zoom: 8, max_zoom: 15};
+var bbox = [ 21.9287109375,12.382928338487408,35.5078125,25.720735134412106];
+var dbPath = __dirname+'/db';
+var poly = JSON.parse(fs.readFileSync('./test-polygon.geojson'));
+var db = levelGeo(sublevel(level(dbPath)), limits); // limits are optional
 
-pts.features.forEach(function(pt, i){
-	var featureID = i.toString();
-    q.defer(geo.put, db, pt, featureID);
-});
-
-q.awaitAll(function(err){
-    geo.bboxQuery(db, 
-    	[-111.3134765625,33.90689555128866,-99.00878906249999,42.16340342422401], function(err, fc){
-        console.log(JSON.stringify(fc))
+//insert polygon
+db.geoPut(poly, '1', function(err){
+	//retrieve polygon
+    db.bboxQuery(bbox, function(err, fc){
+        
     });
 });
 ```
