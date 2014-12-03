@@ -1,6 +1,8 @@
 level-geography
 ---
 
+[![Build Status](https://travis-ci.org/morganherlocker/level-geography.svg)](https://travis-ci.org/morganherlocker/level-geography)
+
 indexed geography storage in leveldb
 
 ##install
