@@ -19,7 +19,7 @@ db.geoPut(feauture, featureID, callback)
 
 ####.bboxQuery
 ```js
-db.bboxQuery([-111.3134765625,33.90689555128866,-99.00878906249999,42.16340342422401], callback)
+db.bboxQuery(bbox, callback)
 ```
 
 ##usage
